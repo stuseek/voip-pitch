@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Mic, Cpu, VolumeX, ArrowRightCircle, Server, Cloud, RefreshCw } from 'lucide-react';
+import { Phone, Mic, Cpu, VolumeX, Server, Cloud, RefreshCw, FileDown, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
     const [metrics, setMetrics] = useState({
@@ -13,6 +13,13 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
         complianceLevel: "",
         totalCostMonthly: 0
     });
+
+    const [activeSection, setActiveSection] = useState(null);
+
+    // Toggle dropdown sections
+    const toggleSection = (section) => {
+        setActiveSection(activeSection === section ? null : section);
+    };
 
     // Handler for component selection
     const handleSelectComponent = (category, componentName) => {
@@ -116,7 +123,9 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
 
     // Get node background color based on type
     const getNodeColor = (type) => {
-        return type === "cloud" ? "bg-blue-100 border-blue-300" : "bg-green-100 border-green-300";
+        return type === "cloud"
+            ? "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200"
+            : "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200";
     };
 
     // Get metrics color class based on value
@@ -136,42 +145,45 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
             if (value < 0.07) return "text-yellow-600";
             return "text-red-600";
         }
-        return "text-gray-800";
+        return "text-slate-800";
     };
 
     return (
-        <div className="p-6 space-y-6">
-            <h2 className="text-2xl font-bold mb-6">Interactive Constructor – Build Your AI Assistant</h2>
+        <div className="p-8 space-y-8">
+            <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">Interactive Constructor</h2>
+                <p className="text-slate-500 max-w-3xl mx-auto">Build your ideal AI Phone Assistant by selecting components and viewing real-time metrics</p>
+            </div>
 
-            <div className="bg-blue-50 p-6 rounded-lg shadow-md mb-6">
-                <p>Configure your ideal AI Phone Assistant by selecting components for each part of the system. The diagram and metrics will update automatically to show your custom configuration.</p>
+            <div className="bg-white p-6 rounded-xl shadow-md mb-8 border border-slate-200">
+                <p className="text-slate-700">Configure your ideal AI Phone Assistant by selecting components for each part of the system. The diagram and metrics will update automatically to show your custom configuration.</p>
             </div>
 
             {/* Template Buttons */}
-            <div className="flex flex-wrap gap-3 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center"
+                    className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center"
                     onClick={() => applyTemplate('best-realism')}
                 >
                     <RefreshCw size={16} className="mr-2" />
                     Best Realism
                 </button>
                 <button
-                    className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center"
+                    className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center justify-center"
                     onClick={() => applyTemplate('lowest-latency')}
                 >
                     <RefreshCw size={16} className="mr-2" />
                     Lowest Latency
                 </button>
                 <button
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center"
+                    className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center justify-center"
                     onClick={() => applyTemplate('cost-effective')}
                 >
                     <RefreshCw size={16} className="mr-2" />
                     Cost Effective
                 </button>
                 <button
-                    className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 flex items-center"
+                    className="p-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-500 flex items-center justify-center"
                     onClick={() => applyTemplate('hipaa-compliant')}
                 >
                     <RefreshCw size={16} className="mr-2" />
@@ -179,368 +191,427 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Component Selectors */}
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-xl font-semibold mb-4">Select Components</h3>
+                <div className="lg:col-span-4">
+                    <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                        <h3 className="text-xl font-bold mb-6">Select Components</h3>
 
-                    {/* Telephony */}
-                    <div className="mb-6">
-                        <h4 className="font-semibold text-gray-700 mb-2 flex items-center">
-                            <Phone size={18} className="mr-2 text-blue-600" />
-                            Telephony
-                        </h4>
-                        <div className="space-y-2">
-                            {nodeData.telephony?.map((node) => (
-                                <div
-                                    key={node.name}
-                                    onClick={() => handleSelectComponent('telephony', node.name)}
-                                    className={`p-3 rounded-md border flex items-center cursor-pointer transition-colors ${
-                                        selectedConfig.telephony === node.name
-                                            ? 'bg-blue-50 border-blue-300'
-                                            : 'border-gray-200 hover:bg-gray-50'
-                                    }`}
-                                >
-                                    {node.type === 'cloud' ? (
-                                        <Cloud size={18} className="mr-2 text-blue-500" />
-                                    ) : (
-                                        <Server size={18} className="mr-2 text-green-500" />
-                                    )}
-                                    <div className="flex-1">
-                                        <div className="flex items-center">
-                                            {node.logo && (
-                                                <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
-                                            )}
-                                            <span>{node.name}</span>
-                                        </div>
-                                        <div className="text-xs text-gray-500">
-                                            Latency: {node.latency_ms}ms | ${node.cost_per_conversation_min.toFixed(3)}/min
+                        {/* Telephony */}
+                        <div className="mb-6">
+                            <h4 className="font-semibold text-slate-700 mb-3 flex items-center">
+                                <Phone size={18} className="mr-3 text-blue-600" />
+                                Telephony
+                            </h4>
+                            <div className="space-y-2">
+                                {nodeData.telephony?.map((node) => (
+                                    <div
+                                        key={node.name}
+                                        onClick={() => handleSelectComponent('telephony', node.name)}
+                                        className={`p-3 rounded-lg border flex items-center cursor-pointer transition-all ${
+                                            selectedConfig.telephony === node.name
+                                                ? 'bg-blue-50 border-blue-300 shadow-sm'
+                                                : 'border-slate-200 hover:bg-slate-50'
+                                        }`}
+                                    >
+                                        {node.type === 'cloud' ? (
+                                            <Cloud size={18} className="mr-2 text-blue-500" />
+                                        ) : (
+                                            <Server size={18} className="mr-2 text-green-500" />
+                                        )}
+                                        <div className="flex-1">
+                                            <div className="flex items-center">
+                                                {node.logo && (
+                                                    <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
+                                                )}
+                                                <span>{node.name}</span>
+                                            </div>
+                                            <div className="text-xs text-slate-500 mt-1">
+                                                Latency: {node.latency_ms}ms | ${node.cost_per_conversation_min.toFixed(3)}/min
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* STT */}
-                    <div className="mb-6">
-                        <h4 className="font-semibold text-gray-700 mb-2 flex items-center">
-                            <Mic size={18} className="mr-2 text-blue-600" />
-                            Speech-to-Text
-                        </h4>
-                        <div className="space-y-2">
-                            {nodeData.stt?.map((node) => (
-                                <div
-                                    key={node.name}
-                                    onClick={() => handleSelectComponent('stt', node.name)}
-                                    className={`p-3 rounded-md border flex items-center cursor-pointer transition-colors ${
-                                        selectedConfig.stt === node.name
-                                            ? 'bg-blue-50 border-blue-300'
-                                            : 'border-gray-200 hover:bg-gray-50'
-                                    }`}
-                                >
-                                    {node.type === 'cloud' ? (
-                                        <Cloud size={18} className="mr-2 text-blue-500" />
-                                    ) : (
-                                        <Server size={18} className="mr-2 text-green-500" />
-                                    )}
-                                    <div className="flex-1">
-                                        <div className="flex items-center">
-                                            {node.logo && (
-                                                <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
-                                            )}
-                                            <span>{node.name}</span>
-                                        </div>
-                                        <div className="text-xs text-gray-500">
-                                            Latency: {node.latency_ms}ms | Realism: {node.realism}/10
+                        {/* STT */}
+                        <div className="mb-6">
+                            <h4 className="font-semibold text-slate-700 mb-3 flex items-center">
+                                <Mic size={18} className="mr-3 text-blue-600" />
+                                Speech-to-Text
+                            </h4>
+                            <div className="space-y-2">
+                                {nodeData.stt?.map((node) => (
+                                    <div
+                                        key={node.name}
+                                        onClick={() => handleSelectComponent('stt', node.name)}
+                                        className={`p-3 rounded-lg border flex items-center cursor-pointer transition-all ${
+                                            selectedConfig.stt === node.name
+                                                ? 'bg-blue-50 border-blue-300 shadow-sm'
+                                                : 'border-slate-200 hover:bg-slate-50'
+                                        }`}
+                                    >
+                                        {node.type === 'cloud' ? (
+                                            <Cloud size={18} className="mr-2 text-blue-500" />
+                                        ) : (
+                                            <Server size={18} className="mr-2 text-green-500" />
+                                        )}
+                                        <div className="flex-1">
+                                            <div className="flex items-center">
+                                                {node.logo && (
+                                                    <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
+                                                )}
+                                                <span>{node.name}</span>
+                                            </div>
+                                            <div className="text-xs text-slate-500 mt-1">
+                                                Latency: {node.latency_ms}ms | Realism: {node.realism}/10
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* LLM */}
-                    <div className="mb-6">
-                        <h4 className="font-semibold text-gray-700 mb-2 flex items-center">
-                            <Cpu size={18} className="mr-2 text-blue-600" />
-                            Language Model
-                        </h4>
-                        <div className="space-y-2">
-                            {nodeData.llm?.map((node) => (
-                                <div
-                                    key={node.name}
-                                    onClick={() => handleSelectComponent('llm', node.name)}
-                                    className={`p-3 rounded-md border flex items-center cursor-pointer transition-colors ${
-                                        selectedConfig.llm === node.name
-                                            ? 'bg-blue-50 border-blue-300'
-                                            : 'border-gray-200 hover:bg-gray-50'
-                                    }`}
-                                >
-                                    {node.type === 'cloud' ? (
-                                        <Cloud size={18} className="mr-2 text-blue-500" />
-                                    ) : (
-                                        <Server size={18} className="mr-2 text-green-500" />
-                                    )}
-                                    <div className="flex-1">
-                                        <div className="flex items-center">
-                                            {node.logo && (
-                                                <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
-                                            )}
-                                            <span>{node.name}</span>
-                                        </div>
-                                        <div className="text-xs text-gray-500">
-                                            Latency: {node.latency_ms}ms | Realism: {node.realism}/10
+                        {/* LLM */}
+                        <div className="mb-6">
+                            <h4 className="font-semibold text-slate-700 mb-3 flex items-center">
+                                <Cpu size={18} className="mr-3 text-blue-600" />
+                                Language Model
+                            </h4>
+                            <div className="space-y-2">
+                                {nodeData.llm?.map((node) => (
+                                    <div
+                                        key={node.name}
+                                        onClick={() => handleSelectComponent('llm', node.name)}
+                                        className={`p-3 rounded-lg border flex items-center cursor-pointer transition-all ${
+                                            selectedConfig.llm === node.name
+                                                ? 'bg-blue-50 border-blue-300 shadow-sm'
+                                                : 'border-slate-200 hover:bg-slate-50'
+                                        }`}
+                                    >
+                                        {node.type === 'cloud' ? (
+                                            <Cloud size={18} className="mr-2 text-blue-500" />
+                                        ) : (
+                                            <Server size={18} className="mr-2 text-green-500" />
+                                        )}
+                                        <div className="flex-1">
+                                            <div className="flex items-center">
+                                                {node.logo && (
+                                                    <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
+                                                )}
+                                                <span>{node.name}</span>
+                                            </div>
+                                            <div className="text-xs text-slate-500 mt-1">
+                                                Latency: {node.latency_ms}ms | Realism: {node.realism}/10
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* TTS */}
-                    <div>
-                        <h4 className="font-semibold text-gray-700 mb-2 flex items-center">
-                            <VolumeX size={18} className="mr-2 text-blue-600" />
-                            Text-to-Speech
-                        </h4>
-                        <div className="space-y-2">
-                            {nodeData.tts?.map((node) => (
-                                <div
-                                    key={node.name}
-                                    onClick={() => handleSelectComponent('tts', node.name)}
-                                    className={`p-3 rounded-md border flex items-center cursor-pointer transition-colors ${
-                                        selectedConfig.tts === node.name
-                                            ? 'bg-blue-50 border-blue-300'
-                                            : 'border-gray-200 hover:bg-gray-50'
-                                    }`}
-                                >
-                                    {node.type === 'cloud' ? (
-                                        <Cloud size={18} className="mr-2 text-blue-500" />
-                                    ) : (
-                                        <Server size={18} className="mr-2 text-green-500" />
-                                    )}
-                                    <div className="flex-1">
-                                        <div className="flex items-center">
-                                            {node.logo && (
-                                                <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
-                                            )}
-                                            <span>{node.name}</span>
-                                        </div>
-                                        <div className="text-xs text-gray-500">
-                                            Latency: {node.latency_ms}ms | Realism: {node.realism}/10
+                        {/* TTS */}
+                        <div>
+                            <h4 className="font-semibold text-slate-700 mb-3 flex items-center">
+                                <VolumeX size={18} className="mr-3 text-blue-600" />
+                                Text-to-Speech
+                            </h4>
+                            <div className="space-y-2">
+                                {nodeData.tts?.map((node) => (
+                                    <div
+                                        key={node.name}
+                                        onClick={() => handleSelectComponent('tts', node.name)}
+                                        className={`p-3 rounded-lg border flex items-center cursor-pointer transition-all ${
+                                            selectedConfig.tts === node.name
+                                                ? 'bg-blue-50 border-blue-300 shadow-sm'
+                                                : 'border-slate-200 hover:bg-slate-50'
+                                        }`}
+                                    >
+                                        {node.type === 'cloud' ? (
+                                            <Cloud size={18} className="mr-2 text-blue-500" />
+                                        ) : (
+                                            <Server size={18} className="mr-2 text-green-500" />
+                                        )}
+                                        <div className="flex-1">
+                                            <div className="flex items-center">
+                                                {node.logo && (
+                                                    <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
+                                                )}
+                                                <span>{node.name}</span>
+                                            </div>
+                                            <div className="text-xs text-slate-500 mt-1">
+                                                Latency: {node.latency_ms}ms | Realism: {node.realism}/10
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Architecture Diagram */}
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-xl font-semibold mb-4">Architecture Diagram</h3>
+                <div className="lg:col-span-4">
+                    <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 h-full">
+                        <h3 className="text-xl font-bold mb-6 text-center">Architecture Diagram</h3>
 
-                    <div className="relative py-6">
-                        {/* Caller */}
-                        <div className="mb-6 mx-auto p-3 bg-blue-100 rounded-lg flex items-center border-2 border-blue-300 w-48 justify-center">
-                            <Phone className="text-blue-600 mr-2" size={20} />
-                            <div>
-                                <h3 className="font-semibold text-sm">Caller</h3>
-                            </div>
-                        </div>
-
-                        <ArrowRightCircle className="transform rotate-90 text-gray-400 mb-2 mx-auto" size={20} />
-
-                        {/* Telephony Node */}
-                        <div
-                            className={`mb-6 mx-auto p-3 rounded-lg flex items-center border-2 w-64 justify-center ${
-                                getNodeColor(getSelectedNodeDetails('telephony').type)
-                            }`}
-                        >
-                            <div className="text-center">
-                                <h3 className="font-semibold text-sm">Telephony: {getSelectedNodeDetails('telephony').name}</h3>
-                                <div className="flex justify-center mt-1">
-                                    {getSelectedNodeDetails('telephony').logo && (
-                                        <img
-                                            src={getSelectedNodeDetails('telephony').logo}
-                                            alt="Telephony logo"
-                                            className="h-6 object-contain"
-                                        />
-                                    )}
+                        <div className="relative py-6">
+                            {/* Caller */}
+                            <div className="mb-6 mx-auto p-3 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center border border-blue-200 w-48 justify-center shadow-sm">
+                                <Phone className="text-blue-600 mr-2" size={20} />
+                                <div>
+                                    <h3 className="font-semibold text-sm">Caller</h3>
                                 </div>
                             </div>
-                        </div>
 
-                        <ArrowRightCircle className="transform rotate-90 text-gray-400 mb-2 mx-auto" size={20} />
+                            <svg className="w-6 h-6 text-indigo-400 mb-2 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                            </svg>
 
-                        {/* STT Node */}
-                        <div
-                            className={`mb-6 mx-auto p-3 rounded-lg flex items-center border-2 w-64 justify-center ${
-                                getNodeColor(getSelectedNodeDetails('stt').type)
-                            }`}
-                        >
-                            <div className="text-center">
-                                <h3 className="font-semibold text-sm">STT: {getSelectedNodeDetails('stt').name}</h3>
-                                <div className="flex justify-center mt-1">
-                                    {getSelectedNodeDetails('stt').logo && (
-                                        <img
-                                            src={getSelectedNodeDetails('stt').logo}
-                                            alt="STT logo"
-                                            className="h-6 object-contain"
-                                        />
-                                    )}
+                            {/* Telephony Node */}
+                            <div
+                                className={`mb-6 mx-auto p-3 rounded-lg flex items-center border w-64 justify-center ${
+                                    getNodeColor(getSelectedNodeDetails('telephony').type)
+                                } shadow-sm transition-all`}
+                            >
+                                <div className="text-center">
+                                    <h3 className="font-semibold text-sm">Telephony</h3>
+                                    <div className="flex justify-center items-center mt-2 gap-2">
+                                        {getSelectedNodeDetails('telephony').logo && (
+                                            <img
+                                                src={getSelectedNodeDetails('telephony').logo}
+                                                alt="Telephony logo"
+                                                className="h-6 object-contain"
+                                            />
+                                        )}
+                                        <span className="text-xs text-slate-600">{getSelectedNodeDetails('telephony').name}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <ArrowRightCircle className="transform rotate-90 text-gray-400 mb-2 mx-auto" size={20} />
+                            <svg className="w-6 h-6 text-indigo-400 mb-2 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                            </svg>
 
-                        {/* LLM Node */}
-                        <div
-                            className={`mb-6 mx-auto p-3 rounded-lg flex items-center border-2 w-64 justify-center ${
-                                getNodeColor(getSelectedNodeDetails('llm').type)
-                            }`}
-                        >
-                            <div className="text-center">
-                                <h3 className="font-semibold text-sm">LLM: {getSelectedNodeDetails('llm').name}</h3>
-                                <div className="flex justify-center mt-1">
-                                    {getSelectedNodeDetails('llm').logo && (
-                                        <img
-                                            src={getSelectedNodeDetails('llm').logo}
-                                            alt="LLM logo"
-                                            className="h-6 object-contain"
-                                        />
-                                    )}
+                            {/* STT Node */}
+                            <div
+                                className={`mb-6 mx-auto p-3 rounded-lg flex items-center border w-64 justify-center ${
+                                    getNodeColor(getSelectedNodeDetails('stt').type)
+                                } shadow-sm transition-all`}
+                            >
+                                <div className="text-center">
+                                    <h3 className="font-semibold text-sm">Speech-to-Text</h3>
+                                    <div className="flex justify-center items-center mt-2 gap-2">
+                                        {getSelectedNodeDetails('stt').logo && (
+                                            <img
+                                                src={getSelectedNodeDetails('stt').logo}
+                                                alt="STT logo"
+                                                className="h-6 object-contain"
+                                            />
+                                        )}
+                                        <span className="text-xs text-slate-600">{getSelectedNodeDetails('stt').name}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <ArrowRightCircle className="transform rotate-90 text-gray-400 mb-2 mx-auto" size={20} />
+                            <svg className="w-6 h-6 text-indigo-400 mb-2 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                            </svg>
 
-                        {/* TTS Node */}
-                        <div
-                            className={`mb-6 mx-auto p-3 rounded-lg flex items-center border-2 w-64 justify-center ${
-                                getNodeColor(getSelectedNodeDetails('tts').type)
-                            }`}
-                        >
-                            <div className="text-center">
-                                <h3 className="font-semibold text-sm">TTS: {getSelectedNodeDetails('tts').name}</h3>
-                                <div className="flex justify-center mt-1">
-                                    {getSelectedNodeDetails('tts').logo && (
-                                        <img
-                                            src={getSelectedNodeDetails('tts').logo}
-                                            alt="TTS logo"
-                                            className="h-6 object-contain"
-                                        />
-                                    )}
+                            {/* LLM Node */}
+                            <div
+                                className={`mb-6 mx-auto p-3 rounded-lg flex items-center border w-64 justify-center ${
+                                    getNodeColor(getSelectedNodeDetails('llm').type)
+                                } shadow-sm transition-all`}
+                            >
+                                <div className="text-center">
+                                    <h3 className="font-semibold text-sm">Language Model</h3>
+                                    <div className="flex justify-center items-center mt-2 gap-2">
+                                        {getSelectedNodeDetails('llm').logo && (
+                                            <img
+                                                src={getSelectedNodeDetails('llm').logo}
+                                                alt="LLM logo"
+                                                className="h-6 object-contain"
+                                            />
+                                        )}
+                                        <span className="text-xs text-slate-600">{getSelectedNodeDetails('llm').name}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <ArrowRightCircle className="transform rotate-90 text-gray-400 mb-2 mx-auto" size={20} />
+                            <svg className="w-6 h-6 text-indigo-400 mb-2 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                            </svg>
 
-                        {/* Response */}
-                        <div className="mx-auto p-3 bg-blue-100 rounded-lg flex items-center border-2 border-blue-300 w-48 justify-center">
-                            <VolumeX className="text-blue-600 mr-2" size={20} />
-                            <div>
-                                <h3 className="font-semibold text-sm">Response</h3>
+                            {/* TTS Node */}
+                            <div
+                                className={`mb-6 mx-auto p-3 rounded-lg flex items-center border w-64 justify-center ${
+                                    getNodeColor(getSelectedNodeDetails('tts').type)
+                                } shadow-sm transition-all`}
+                            >
+                                <div className="text-center">
+                                    <h3 className="font-semibold text-sm">Text-to-Speech</h3>
+                                    <div className="flex justify-center items-center mt-2 gap-2">
+                                        {getSelectedNodeDetails('tts').logo && (
+                                            <img
+                                                src={getSelectedNodeDetails('tts').logo}
+                                                alt="TTS logo"
+                                                className="h-6 object-contain"
+                                            />
+                                        )}
+                                        <span className="text-xs text-slate-600">{getSelectedNodeDetails('tts').name}</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Legend */}
-                        <div className="absolute bottom-0 right-0 bg-white p-2 border rounded text-xs">
-                            <div className="flex items-center mb-1">
-                                <div className="w-3 h-3 bg-blue-100 border border-blue-300 mr-1"></div>
-                                <span>Cloud</span>
+                            <svg className="w-6 h-6 text-indigo-400 mb-2 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                            </svg>
+
+                            {/* Response */}
+                            <div className="mx-auto p-3 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center border border-blue-200 w-48 justify-center shadow-sm">
+                                <VolumeX className="text-blue-600 mr-2" size={20} />
+                                <div>
+                                    <h3 className="font-semibold text-sm">Response</h3>
+                                </div>
                             </div>
-                            <div className="flex items-center">
-                                <div className="w-3 h-3 bg-green-100 border border-green-300 mr-1"></div>
-                                <span>On-Premises</span>
+
+                            {/* Legend */}
+                            <div className="absolute bottom-2 right-2 bg-white p-2 border border-slate-200 rounded-lg text-xs shadow-sm">
+                                <div className="flex items-center mb-1">
+                                    <Cloud size={12} className="text-blue-500 mr-1" />
+                                    <span>Cloud</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <Server size={12} className="text-green-500 mr-1" />
+                                    <span>On-Premises</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Metrics */}
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-xl font-semibold mb-4">Performance Metrics</h3>
+                <div className="lg:col-span-4">
+                    <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 h-full">
+                        <h3 className="text-xl font-bold mb-6 text-center">Performance Metrics</h3>
 
-                    <div className="space-y-4">
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                            <h4 className="font-semibold text-gray-700 mb-2">Deployment Type</h4>
-                            <div className="text-lg font-medium">{metrics.deploymentType}</div>
-                        </div>
-
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                            <h4 className="font-semibold text-gray-700 mb-2">Total Latency</h4>
-                            <div className="text-lg font-medium">
-                <span className={getMetricColor('latency', metrics.totalLatency)}>
-                  {metrics.totalLatency}ms
-                </span>
-                                <span className="text-sm ml-2">({getLatencyRating(metrics.totalLatency)})</span>
-                            </div>
-                        </div>
-
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                            <h4 className="font-semibold text-gray-700 mb-2">Realism Score</h4>
-                            <div className="text-lg font-medium">
-                <span className={getMetricColor('realism', metrics.avgRealism)}>
-                  {metrics.avgRealism}/10
-                </span>
-                            </div>
-                        </div>
-
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                            <h4 className="font-semibold text-gray-700 mb-2">HIPAA Compliance</h4>
-                            <div className="text-lg font-medium">
-                <span className={getMetricColor('complianceLevel', metrics.complianceLevel)}>
-                  {metrics.complianceLevel}
-                </span>
-                            </div>
-                        </div>
-
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                            <h4 className="font-semibold text-gray-700 mb-2">Cost Per Minute</h4>
-                            <div className="text-lg font-medium">
-                <span className={getMetricColor('cost', metrics.costPerMin)}>
-                  ${metrics.costPerMin.toFixed(3)}
-                </span>
-                            </div>
-                        </div>
-
-                        <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                            <h4 className="font-semibold text-yellow-700 mb-2">Cost Estimates</h4>
-                            <div className="space-y-2">
-                                <div className="flex justify-between">
-                                    <span>Monthly (8hr/day):</span>
-                                    <span className="font-medium">${metrics.totalCostMonthly}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>MVP Development:</span>
-                                    <span className="font-medium">${metrics.mvpCost.toLocaleString()}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>Full Implementation:</span>
-                                    <span className="font-medium">${metrics.fullCost.toLocaleString()}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>Annual Support:</span>
-                                    <span className="font-medium">${metrics.annualSupportCost.toLocaleString()}</span>
+                        <div className="space-y-4">
+                            <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-4 rounded-lg border border-slate-200">
+                                <h4 className="font-semibold text-slate-700 mb-2">Deployment Type</h4>
+                                <div className="text-lg font-medium flex items-center">
+                                    {metrics.deploymentType === "Full Cloud" ? (
+                                        <Cloud size={18} className="text-blue-500 mr-2" />
+                                    ) : metrics.deploymentType === "Full On-Premises" ? (
+                                        <Server size={18} className="text-green-500 mr-2" />
+                                    ) : (
+                                        <>
+                                            <Cloud size={18} className="text-blue-500 mr-1" />
+                                            <Server size={18} className="text-green-500 mr-2" />
+                                        </>
+                                    )}
+                                    {metrics.deploymentType}
                                 </div>
                             </div>
+
+                            <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-4 rounded-lg border border-slate-200">
+                                <h4 className="font-semibold text-slate-700 mb-2">Total Latency</h4>
+                                <div className="text-lg font-medium">
+                                    <span className={getMetricColor('latency', metrics.totalLatency)}>
+                                        {metrics.totalLatency}ms
+                                    </span>
+                                    <span className="text-sm ml-2 text-slate-500">({getLatencyRating(metrics.totalLatency)})</span>
+                                </div>
+
+                                <div className="mt-2 w-full bg-slate-200 rounded-full h-2">
+                                    <div
+                                        className={`h-2 rounded-full ${
+                                            metrics.totalLatency < 500
+                                                ? 'bg-gradient-to-r from-green-500 to-emerald-500'
+                                                : metrics.totalLatency < 800
+                                                    ? 'bg-gradient-to-r from-yellow-400 to-amber-500'
+                                                    : 'bg-gradient-to-r from-red-500 to-rose-500'
+                                        }`}
+                                        style={{ width: `${Math.min(100, (metrics.totalLatency / 1500) * 100)}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+
+                            <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-4 rounded-lg border border-slate-200">
+                                <h4 className="font-semibold text-slate-700 mb-2">Realism Score</h4>
+                                <div className="text-lg font-medium">
+                                    <span className={getMetricColor('realism', metrics.avgRealism)}>
+                                        {metrics.avgRealism}/10
+                                    </span>
+                                </div>
+
+                                <div className="mt-2 w-full bg-slate-200 rounded-full h-2">
+                                    <div
+                                        className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600"
+                                        style={{ width: `${(metrics.avgRealism / 10) * 100}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+
+                            <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-4 rounded-lg border border-slate-200">
+                                <h4 className="font-semibold text-slate-700 mb-2">HIPAA Compliance</h4>
+                                <div className="text-lg font-medium">
+                                    <span className={`px-3 py-1 rounded-full text-sm ${
+                                        metrics.complianceLevel === "High"
+                                            ? 'bg-green-100 text-green-800'
+                                            : metrics.complianceLevel === "Medium"
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-red-100 text-red-800'
+                                    }`}>
+                                        {metrics.complianceLevel}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-4 rounded-lg border border-slate-200">
+                                <h4 className="font-semibold text-slate-700 mb-2">Cost Per Minute</h4>
+                                <div className="text-lg font-medium">
+                                    <span className={getMetricColor('cost', metrics.costPerMin)}>
+                                        ${metrics.costPerMin.toFixed(3)}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg border border-amber-200">
+                                <h4 className="font-semibold text-amber-800 mb-2">Cost Estimates</h4>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-slate-700">Monthly (8hr/day):</span>
+                                        <span className="font-medium text-amber-800">${metrics.totalCostMonthly}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-slate-700">MVP Development:</span>
+                                        <span className="font-medium text-amber-800">${metrics.mvpCost.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-slate-700">Full Implementation:</span>
+                                        <span className="font-medium text-amber-800">${metrics.fullCost.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-slate-700">Annual Support:</span>
+                                        <span className="font-medium text-amber-800">${metrics.annualSupportCost.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        <button className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center">
+                            <FileDown size={16} className="mr-2" />
+                            Export Configuration
+                        </button>
                     </div>
-
-                    <button className="w-full mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        Export Configuration
-                    </button>
                 </div>
             </div>
 
-            <div className="bg-blue-50 p-6 rounded-lg shadow-md mt-6">
-                <h3 className="text-xl font-semibold mb-4">Configuration Summary</h3>
-                <p className="mb-4">
+            <div className="bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-xl shadow-md mt-8 border border-slate-200">
+                <h3 className="text-xl font-bold mb-4">Configuration Summary</h3>
+                <p className="mb-4 text-slate-700">
                     Your current configuration is a <strong>{metrics.deploymentType}</strong> solution with
                     <strong className={getMetricColor('latency', metrics.totalLatency)}> {getLatencyRating(metrics.totalLatency).toLowerCase()} latency</strong> and
                     <strong className={getMetricColor('realism', metrics.avgRealism)}> {
@@ -550,10 +621,13 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
                     } realism</strong>.
                 </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h4 className="font-semibold mb-1">Advantages</h4>
-                        <ul className="list-disc pl-5 space-y-1 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+                        <h4 className="font-semibold mb-2 text-blue-800 flex items-center">
+                            <CheckCircle size={18} className="text-blue-600 mr-2" />
+                            Advantages
+                        </h4>
+                        <ul className="list-disc pl-5 space-y-1 text-slate-700">
                             {metrics.deploymentType === "Full Cloud" && (
                                 <>
                                     <li>Rapid deployment with minimal upfront investment</li>
@@ -584,9 +658,12 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
                         </ul>
                     </div>
 
-                    <div>
-                        <h4 className="font-semibold mb-1">Considerations</h4>
-                        <ul className="list-disc pl-5 space-y-1 text-sm">
+                    <div className="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+                        <h4 className="font-semibold mb-2 text-amber-800 flex items-center">
+                            <AlertTriangle size={18} className="text-amber-600 mr-2" />
+                            Considerations
+                        </h4>
+                        <ul className="list-disc pl-5 space-y-1 text-slate-700">
                             {metrics.deploymentType === "Full Cloud" && (
                                 <>
                                     <li>Ongoing usage costs scale with volume</li>
