@@ -95,8 +95,8 @@ export const calculateMetrics = (selectedConfig, nodeData, getSelectedNodeDetail
     if (allOnPrem) complianceLevel = "High";
     if (allCloud) complianceLevel = "Low to Medium";
 
-    // Calculate monthly cost (assuming 8 hours/day, 30 days/month)
-    const totalCostMonthly = (costPerMin * 60 * 8 * 30).toFixed(2);
+    // Calculate monthly cost (assuming 24 hours/day, 30 days/month)
+    const totalCostMonthly = (costPerMin * 60 * 24 * 30).toFixed(2);
 
     // Calculate team composition
     const calculateTotalTeamHours = (implementationType) => {

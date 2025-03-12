@@ -93,7 +93,7 @@ const PerformanceMetrics = ({ metrics }) => {
                     <h4 className="font-semibold text-amber-800 mb-2">Cost Estimates</h4>
                     <div className="space-y-2">
                         <div className="flex justify-between items-center">
-                            <span className="text-slate-700">Monthly (8hr/day):</span>
+                            <span className="text-slate-700">Monthly (24/7):</span>
                             <span className="font-medium text-amber-800">${metrics.totalCostMonthly}</span>
                         </div>
                         <div className="flex justify-between items-center">
