@@ -2,7 +2,7 @@ export const nodeData = {
     "telephony": [
         {
             "name": "Twilio (Cloud)",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Twilio_logo.png",
+            "logo": "https://cdn.icon-icons.com/icons2/2699/PNG/512/twilio_logo_icon_169441.png",
             "realism": 7,
             "latency_ms": 120,
             "interruptions": "Yes",
@@ -26,7 +26,7 @@ export const nodeData = {
         },
         {
             "name": "Vonage (Nexmo)",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Vonage_Logo.png",
+            "logo": "https://cdn.worldvectorlogo.com/logos/vonage-logo.svg",
             "realism": 7,
             "latency_ms": 120,
             "interruptions": "Yes",
@@ -50,7 +50,7 @@ export const nodeData = {
         },
         {
             "name": "Amazon Connect",
-            "logo": "https://d1.awsstatic.com/product-marketing/Connect/amazon-connect-logo.png",
+            "logo": "https://cdn.icon-icons.com/icons2/2407/PNG/512/aws_icon_146074.png",
             "realism": 7,
             "latency_ms": 150,
             "interruptions": "Yes",
@@ -74,7 +74,7 @@ export const nodeData = {
         },
         {
             "name": "Plivo",
-            "logo": "https://www.plivo.com/assets/images/logos/plivo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/plivo.svg",
             "realism": 7,
             "latency_ms": 120,
             "interruptions": "Yes",
@@ -98,7 +98,7 @@ export const nodeData = {
         },
         {
             "name": "Telnyx",
-            "logo": "https://uploads-ssl.webflow.com/5f7b51964246ff1462b5067e/5f7b51964246ff5f98b50730_telnyx-logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/telnyx.svg",
             "realism": 7,
             "latency_ms": 120,
             "interruptions": "Yes",
@@ -122,7 +122,7 @@ export const nodeData = {
         },
         {
             "name": "On-Prem PBX (Asterisk)",
-            "logo": "https://www.cdnlogo.com/logos/a/51/asterisk.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/asterisk-1.svg",
             "realism": 10,
             "latency_ms": 40,
             "interruptions": "Yes",
@@ -148,7 +148,7 @@ export const nodeData = {
     "stt": [
         {
             "name": "Google Cloud STT",
-            "logo": "https://cloud.google.com/text-to-speech/images/google-cloud-tts-logo.png",
+            "logo": "https://cdn.icon-icons.com/icons2/2699/PNG/512/google_cloud_logo_icon_171058.png",
             "realism": 7,
             "latency_ms": 700,
             "interruptions": "Yes",
@@ -172,7 +172,7 @@ export const nodeData = {
         },
         {
             "name": "Deepgram (Cloud)",
-            "logo": "https://deepgram.com/wp-content/uploads/2021/08/deepgram-logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/deepgram.svg",
             "realism": 8,
             "latency_ms": 250,
             "interruptions": "Yes",
@@ -196,7 +196,7 @@ export const nodeData = {
         },
         {
             "name": "OpenAI Whisper",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/openai-2.svg",
             "realism": 9,
             "latency_ms": 600,
             "interruptions": "Partial",
@@ -220,7 +220,7 @@ export const nodeData = {
         },
         {
             "name": "Azure Speech-to-Text",
-            "logo": "https://azure.microsoft.com/sfassets/img/azure-symbol.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/azure-1.svg",
             "realism": 7.5,
             "latency_ms": 800,
             "interruptions": "Yes",
@@ -244,7 +244,7 @@ export const nodeData = {
         },
         {
             "name": "IBM Watson STT",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_Watson_logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/ibm-watson-logo.svg",
             "realism": 8,
             "latency_ms": 1200,
             "interruptions": "Yes",
@@ -268,7 +268,7 @@ export const nodeData = {
         },
         {
             "name": "Whisper (On-Prem)",
-            "logo": "https://www.cdnlogo.com/logos/o/38/openai.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/openai-2.svg",
             "realism": 8,
             "latency_ms": 350,
             "interruptions": "Yes (with VAD)",
@@ -294,7 +294,7 @@ export const nodeData = {
     "llm": [
         {
             "name": "OpenAI GPT-4 (Cloud)",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/openai-2.svg",
             "realism": 10,
             "latency_ms": 1500,
             "interruptions": "Partial (stream)",
@@ -318,7 +318,7 @@ export const nodeData = {
         },
         {
             "name": "OpenAI GPT-3.5 (Cloud)",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/openai-2.svg",
             "realism": 8,
             "latency_ms": 700,
             "interruptions": "Partial (stream)",
@@ -342,7 +342,7 @@ export const nodeData = {
         },
         {
             "name": "LLaMA-2 13B (On-Prem)",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Meta_Logo.png",
+            "logo": "https://cdn.worldvectorlogo.com/logos/meta-1.svg",
             "realism": 7,
             "latency_ms": 1800,
             "interruptions": "N/A",
@@ -366,7 +366,7 @@ export const nodeData = {
         },
         {
             "name": "Anthropic Claude",
-            "logo": "https://uploads-ssl.webflow.com/6392d1d842d3c5459d1b10fe/6392d1d842d3c5c1c71b1152_anthropic-logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/anthropic.svg",
             "realism": 9,
             "latency_ms": 800,
             "interruptions": "Partial (stream)",
@@ -390,9 +390,9 @@ export const nodeData = {
         },
         {
             "name": "Google Gemini",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/google-logo-2022.svg",
             "realism": 10,
-            "latency_ms": 0,
+            "latency_ms": 600,
             "interruptions": "N/A",
             "cost_per_conversation_min": 0,
             "annual_support_cost": 0,
@@ -414,9 +414,9 @@ export const nodeData = {
         },
         {
             "name": "Mistral 7B",
-            "logo": "https://mistral.ai/wp-content/uploads/2023/09/Mistral_Logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/mistral-ai.svg",
             "realism": 6,
-            "latency_ms": 800,
+            "latency_ms": 500,
             "interruptions": "N/A",
             "cost_per_conversation_min": 0,
             "annual_support_cost": 0,
@@ -439,8 +439,32 @@ export const nodeData = {
     ],
     "tts": [
         {
+            "name": "Dialog 1 (On-Prem)",
+            "logo": "https://cdn.worldvectorlogo.com/logos/play-button-4.svg",
+            "realism": 9,
+            "latency_ms": 100,
+            "interruptions": "Yes",
+            "cost_per_conversation_min": 0.001,
+            "annual_support_cost": 2000,
+            "mvp_cost": {
+                "devops": 40,
+                "qa": 20,
+                "manager": 15,
+                "backend": 30,
+                "ml_engineer": 25
+            },
+            "full_implementation_cost": {
+                "devops": 100,
+                "qa": 50,
+                "manager": 30,
+                "backend": 80,
+                "ml_engineer": 60
+            },
+            "type": "on-prem"
+        },
+        {
             "name": "ElevenLabs (Cloud)",
-            "logo": "https://api.elevenlabs.io/v1/assets/logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/elevenlabs.svg",
             "realism": 9,
             "latency_ms": 1300,
             "interruptions": "Partial (user can stop audio)",
@@ -464,7 +488,7 @@ export const nodeData = {
         },
         {
             "name": "AWS Polly (Cloud)",
-            "logo": "https://d1.awsstatic.com/product-marketing/Polly/polly-logo.png",
+            "logo": "https://cdn.icon-icons.com/icons2/2407/PNG/512/aws_icon_146074.png",
             "realism": 8,
             "latency_ms": 1400,
             "interruptions": "Yes",
@@ -488,7 +512,7 @@ export const nodeData = {
         },
         {
             "name": "Google Cloud TTS",
-            "logo": "https://cloud.google.com/text-to-speech/images/google-cloud-tts-logo.png",
+            "logo": "https://cdn.icon-icons.com/icons2/2699/PNG/512/google_cloud_logo_icon_171058.png",
             "realism": 9,
             "latency_ms": 800,
             "interruptions": "Partial (streamed audio)",
@@ -512,7 +536,7 @@ export const nodeData = {
         },
         {
             "name": "Microsoft Azure Neural TTS",
-            "logo": "https://azure.microsoft.com/sfassets/img/azure-symbol.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/azure-1.svg",
             "realism": 8.5,
             "latency_ms": 1500,
             "interruptions": "Partial (sdk streaming)",
@@ -536,7 +560,7 @@ export const nodeData = {
         },
         {
             "name": "Coqui TTS (On-Prem)",
-            "logo": "https://raw.githubusercontent.com/coqui-ai/brand/main/coqui-logo.png",
+            "logo": "https://cdn.worldvectorlogo.com/logos/coqui-ai.svg",
             "realism": 7,
             "latency_ms": 200,
             "interruptions": "Yes",
@@ -560,7 +584,7 @@ export const nodeData = {
         },
         {
             "name": "IBM Watson TTS",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_Watson_logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/ibm-watson-logo.svg",
             "realism": 8,
             "latency_ms": 1500,
             "interruptions": "Partial",
@@ -584,7 +608,7 @@ export const nodeData = {
         },
         {
             "name": "Offline TTS (On-Prem)",
-            "logo": "https://www.cdnlogo.com/logos/c/78/coqui-ai-logo.svg",
+            "logo": "https://cdn.worldvectorlogo.com/logos/coqui-ai.svg",
             "realism": 6,
             "latency_ms": 400,
             "interruptions": "Yes",

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, Mic, Cpu, VolumeX, Server, Cloud } from 'lucide-react';
 import { getNodeColor } from './MetricUtils';
+import FallbackImage from './FallbackImage';
 
 const ArchitectureDiagram = ({ getSelectedNodeDetails }) => {
 
@@ -31,7 +32,7 @@ const ArchitectureDiagram = ({ getSelectedNodeDetails }) => {
                         <h3 className="font-semibold text-sm">Telephony</h3>
                         <div className="flex justify-center items-center mt-2 gap-2">
                             {getSelectedNodeDetails('telephony').logo && (
-                                <img
+                                <FallbackImage
                                     src={getSelectedNodeDetails('telephony').logo}
                                     alt="Telephony logo"
                                     className="h-6 object-contain"
@@ -56,7 +57,7 @@ const ArchitectureDiagram = ({ getSelectedNodeDetails }) => {
                         <h3 className="font-semibold text-sm">Speech-to-Text</h3>
                         <div className="flex justify-center items-center mt-2 gap-2">
                             {getSelectedNodeDetails('stt').logo && (
-                                <img
+                                <FallbackImage
                                     src={getSelectedNodeDetails('stt').logo}
                                     alt="STT logo"
                                     className="h-6 object-contain"
@@ -81,7 +82,7 @@ const ArchitectureDiagram = ({ getSelectedNodeDetails }) => {
                         <h3 className="font-semibold text-sm">Language Model</h3>
                         <div className="flex justify-center items-center mt-2 gap-2">
                             {getSelectedNodeDetails('llm').logo && (
-                                <img
+                                <FallbackImage
                                     src={getSelectedNodeDetails('llm').logo}
                                     alt="LLM logo"
                                     className="h-6 object-contain"
@@ -106,7 +107,7 @@ const ArchitectureDiagram = ({ getSelectedNodeDetails }) => {
                         <h3 className="font-semibold text-sm">Text-to-Speech</h3>
                         <div className="flex justify-center items-center mt-2 gap-2">
                             {getSelectedNodeDetails('tts').logo && (
-                                <img
+                                <FallbackImage
                                     src={getSelectedNodeDetails('tts').logo}
                                     alt="TTS logo"
                                     className="h-6 object-contain"

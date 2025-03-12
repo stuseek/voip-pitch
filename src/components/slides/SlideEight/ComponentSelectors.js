@@ -1,5 +1,6 @@
 import React from 'react';
 import { Phone, Mic, Cpu, VolumeX, Cloud, Server } from 'lucide-react';
+import FallbackImage from './FallbackImage';
 
 const ComponentSelectors = ({ nodeData, selectedConfig, setSelectedConfig }) => {
     // Handler for component selection
@@ -39,7 +40,11 @@ const ComponentSelectors = ({ nodeData, selectedConfig, setSelectedConfig }) => 
                             <div className="flex-1">
                                 <div className="flex items-center">
                                     {node.logo && (
-                                        <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
+                                        <FallbackImage
+                                            src={node.logo}
+                                            alt={`${node.name} logo`}
+                                            className="h-5 w-5 mr-2 object-contain"
+                                        />
                                     )}
                                     <span>{node.name}</span>
                                 </div>
@@ -77,7 +82,11 @@ const ComponentSelectors = ({ nodeData, selectedConfig, setSelectedConfig }) => 
                             <div className="flex-1">
                                 <div className="flex items-center">
                                     {node.logo && (
-                                        <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
+                                        <FallbackImage
+                                            src={node.logo}
+                                            alt={`${node.name} logo`}
+                                            className="h-5 w-5 mr-2 object-contain"
+                                        />
                                     )}
                                     <span>{node.name}</span>
                                 </div>
@@ -115,7 +124,11 @@ const ComponentSelectors = ({ nodeData, selectedConfig, setSelectedConfig }) => 
                             <div className="flex-1">
                                 <div className="flex items-center">
                                     {node.logo && (
-                                        <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
+                                        <FallbackImage
+                                            src={node.logo}
+                                            alt={`${node.name} logo`}
+                                            className="h-5 w-5 mr-2 object-contain"
+                                        />
                                     )}
                                     <span>{node.name}</span>
                                 </div>
@@ -153,7 +166,11 @@ const ComponentSelectors = ({ nodeData, selectedConfig, setSelectedConfig }) => 
                             <div className="flex-1">
                                 <div className="flex items-center">
                                     {node.logo && (
-                                        <img src={node.logo} alt={`${node.name} logo`} className="h-5 w-5 mr-2 object-contain" />
+                                        <FallbackImage
+                                            src={node.logo}
+                                            alt={`${node.name} logo`}
+                                            className="h-5 w-5 mr-2 object-contain"
+                                        />
                                     )}
                                     <span>{node.name}</span>
                                 </div>

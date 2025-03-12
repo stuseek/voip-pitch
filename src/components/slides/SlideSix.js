@@ -86,7 +86,7 @@ const SlideSix = () => {
                         <li>Server hardware with GPUs</li>
                         <li>Development: 2-4 months</li>
                         <li>More specialized AI engineering</li>
-                        <li><span className="font-bold">Estimated cost: $75,000-$150,000</span></li>
+                        <li><span className="font-bold">Estimated cost: $45,000-$75,000</span></li>
                     </ul>
                 </div>
 
@@ -98,7 +98,7 @@ const SlideSix = () => {
                         <li>Custom model fine-tuning</li>
                         <li>More extensive testing</li>
                         <li>Security hardening</li>
-                        <li><span className="font-bold">Estimated cost: $150,000-$300,000</span></li>
+                        <li><span className="font-bold">Estimated cost: $140,000-$200,000</span></li>
                     </ul>
                 </div>
 
@@ -110,7 +110,7 @@ const SlideSix = () => {
                         <li>AI engineer for model updates</li>
                         <li>Hardware maintenance/upgrades</li>
                         <li>High fixed costs, low variable costs</li>
-                        <li><span className="font-bold">Estimated cost: $100,000-$200,000/year</span></li>
+                        <li><span className="font-bold">Estimated cost: $50,000-$80,000/year</span></li>
                     </ul>
                 </div>
             </div>

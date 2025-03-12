@@ -19,63 +19,149 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
         totalCostMonthly: 0
     });
 
-    // Apply template configurations
+    // Apply template configurations with improved selection logic
     const applyTemplate = (template) => {
-        // Find the first option of each category as fallback
-        const firstTelephony = nodeData.telephony?.[0]?.name || "";
-        const firstSTT = nodeData.stt?.[0]?.name || "";
-        const firstLLM = nodeData.llm?.[0]?.name || "";
-        const firstTTS = nodeData.tts?.[0]?.name || "";
+        // Helper to score components based on multiple criteria
+        const scoreComponent = (component, weights) => {
+            if (!component) return 0;
 
-        // Helper to find component by type
-        const findComponentByType = (category, type) => {
-            const component = nodeData[category]?.find(item => item.type === type);
-            return component ? component.name : "";
+            // Normalize values to a 0-10 scale
+            const normalizedLatency = Math.max(0, 10 - (component.latency_ms / 200)); // Lower is better
+            const normalizedCost = Math.max(0, 10 - (component.cost_per_conversation_min * 1000)); // Lower is better
+            const isOnPrem = component.type === 'on-prem' ? 10 : 0; // On-prem gets 10, cloud gets 0
+
+            // Calculate weighted score
+            return (
+                (weights.realism * component.realism) +
+                (weights.latency * normalizedLatency) +
+                (weights.cost * normalizedCost) +
+                (weights.compliance * isOnPrem)
+            );
         };
 
-        // Helper to find most realistic component
-        const findMostRealistic = (category) => {
+        // Find the best component in a category based on weights
+        const findBestComponent = (category, weights) => {
             if (!nodeData[category]?.length) return "";
-            const sorted = [...nodeData[category]].sort((a, b) => b.realism - a.realism);
-            return sorted[0].name;
+
+            // Score each component and sort
+            const scored = nodeData[category].map(item => ({
+                name: item.name,
+                score: scoreComponent(item, weights)
+            }));
+
+            const sorted = [...scored].sort((a, b) => b.score - a.score);
+            return sorted[0]?.name || "";
         };
 
-        // Helper to find lowest latency component
-        const findLowestLatency = (category) => {
+        // Find the lowest cost component that meets minimum requirements
+        const findBestCostComponent = (category, minRealism = 6) => {
             if (!nodeData[category]?.length) return "";
+
+            // Filter by minimum realism
+            const viable = nodeData[category].filter(item => item.realism >= minRealism);
+
+            // Calculate 5-year total cost of ownership (TCO)
+            const withTCO = viable.map(item => {
+                // Monthly operational cost (assuming 24/7 operation)
+                const monthlyOpCost = item.cost_per_conversation_min * 60 * 24 * 30;
+
+                // Implementation cost (assuming full implementation)
+                const implCost = Object.entries(item.full_implementation_cost || {}).reduce(
+                    (sum, [role, hours]) => sum + hours, 0
+                ) * 85; // Average hourly rate
+
+                // 5-year TCO
+                const tco = (monthlyOpCost * 12 * 5) + implCost + (item.annual_support_cost * 5);
+
+                return { name: item.name, tco };
+            });
+
+            const sorted = [...withTCO].sort((a, b) => a.tco - b.tco);
+            return sorted[0]?.name || "";
+        };
+
+        // Find components that best balance latency and realism
+        const findBalancedLatencyComponent = (category, maxLatency = 800) => {
+            if (!nodeData[category]?.length) return "";
+
+            // Filter by acceptable latency
+            const viableLatency = nodeData[category].filter(item => item.latency_ms <= maxLatency);
+
+            // If nothing meets latency requirement, just get lowest latency
+            if (viableLatency.length === 0) {
+                const sorted = [...nodeData[category]].sort((a, b) => a.latency_ms - b.latency_ms);
+                return sorted[0]?.name || "";
+            }
+
+            // From viable latency options, pick highest realism
+            const sorted = [...viableLatency].sort((a, b) => b.realism - a.realism);
+            return sorted[0]?.name || "";
+        };
+
+        // Find the most HIPAA-compliant components prioritizing on-prem and latency
+        const findHIPAAComponent = (category, minRealism = 6) => {
+            if (!nodeData[category]?.length) return "";
+
+            // Step 1: Get all on-prem options that meet minimum realism requirements
+            const onPremOptions = nodeData[category].filter(
+                item => item.type === 'on-prem' && item.realism >= minRealism
+            );
+
+            // If we have on-prem options, sort them by latency (lowest first)
+            if (onPremOptions.length > 0) {
+                const sorted = [...onPremOptions].sort((a, b) => a.latency_ms - b.latency_ms);
+                return sorted[0]?.name || "";
+            }
+
+            // Step 2: If no on-prem options available, fall back to cloud with a warning
+            // (In a real implementation, we might want to show a warning to the user)
+            const cloudOptions = nodeData[category].filter(
+                item => item.realism >= minRealism
+            );
+
+            if (cloudOptions.length > 0) {
+                // Still sort by latency for cloud options
+                const sorted = [...cloudOptions].sort((a, b) => a.latency_ms - b.latency_ms);
+                return sorted[0]?.name || "";
+            }
+
+            // Fallback: just pick lowest latency
             const sorted = [...nodeData[category]].sort((a, b) => a.latency_ms - b.latency_ms);
-            return sorted[0].name;
+            return sorted[0]?.name || "";
         };
 
+        // Apply template based on selection
         if (template === "best-realism") {
+            // Best realism prioritizes realism (70%) but also considers latency (30%)
             setSelectedConfig({
-                telephony: findMostRealistic('telephony') || firstTelephony,
-                stt: findMostRealistic('stt') || firstSTT,
-                llm: findMostRealistic('llm') || firstLLM,
-                tts: findMostRealistic('tts') || firstTTS
+                telephony: findBestComponent('telephony', { realism: 0.7, latency: 0.3, cost: 0, compliance: 0 }),
+                stt: findBestComponent('stt', { realism: 0.7, latency: 0.3, cost: 0, compliance: 0 }),
+                llm: findBestComponent('llm', { realism: 0.7, latency: 0.3, cost: 0, compliance: 0 }),
+                tts: findBestComponent('tts', { realism: 0.7, latency: 0.3, cost: 0, compliance: 0 })
             });
         } else if (template === "lowest-latency") {
+            // Balanced latency approach that considers realism within acceptable latency threshold
             setSelectedConfig({
-                telephony: findLowestLatency('telephony') || firstTelephony,
-                stt: findLowestLatency('stt') || firstSTT,
-                llm: findLowestLatency('llm') || firstLLM,
-                tts: findLowestLatency('tts') || firstTTS
+                telephony: findBalancedLatencyComponent('telephony', 300),
+                stt: findBalancedLatencyComponent('stt', 500),
+                llm: findBalancedLatencyComponent('llm', 1000),
+                tts: findBalancedLatencyComponent('tts', 500)
             });
         } else if (template === "cost-effective") {
-            // On-prem solutions are typically more cost-effective long-term
+            // Cost effective based on 5-year TCO calculation
             setSelectedConfig({
-                telephony: findComponentByType('telephony', 'on-prem') || firstTelephony,
-                stt: findComponentByType('stt', 'on-prem') || firstSTT,
-                llm: findComponentByType('llm', 'on-prem') || firstLLM,
-                tts: findComponentByType('tts', 'on-prem') || firstTTS
+                telephony: findBestCostComponent('telephony'),
+                stt: findBestCostComponent('stt'),
+                llm: findBestCostComponent('llm'),
+                tts: findBestCostComponent('tts')
             });
         } else if (template === "hipaa-compliant") {
-            // On-prem solutions offer better HIPAA compliance
+            // HIPAA compliant with performance considerations
             setSelectedConfig({
-                telephony: findComponentByType('telephony', 'on-prem') || firstTelephony,
-                stt: findComponentByType('stt', 'on-prem') || firstSTT,
-                llm: findComponentByType('llm', 'on-prem') || firstLLM,
-                tts: findComponentByType('tts', 'on-prem') || firstTTS
+                telephony: findHIPAAComponent('telephony'),
+                stt: findHIPAAComponent('stt'),
+                llm: findHIPAAComponent('llm'),
+                tts: findHIPAAComponent('tts')
             });
         }
     };
