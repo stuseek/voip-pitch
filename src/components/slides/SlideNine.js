@@ -607,21 +607,21 @@ const SlideNine = ({nodeData, selectedConfig}) => {
             </div>
 
             {/* Call-to-Action */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 rounded-xl shadow-md text-white">
-                <div className="flex flex-col md:flex-row items-center justify-between">
-                    <div>
-                        <h3 className="text-xl font-bold mb-2">Ready to Move Forward?</h3>
-                        <p className="opacity-90">Let's discuss your specific requirements and create a custom
-                            implementation plan.</p>
-                    </div>
+            {/*<div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 rounded-xl shadow-md text-white">*/}
+            {/*    <div className="flex flex-col md:flex-row items-center justify-between">*/}
+            {/*        <div>*/}
+            {/*            <h3 className="text-xl font-bold mb-2">Ready to Move Forward?</h3>*/}
+            {/*            <p className="opacity-90">Let's discuss your specific requirements and create a custom*/}
+            {/*                implementation plan.</p>*/}
+            {/*        </div>*/}
 
-                    <button
-                        className="mt-4 md:mt-0 px-6 py-3 bg-white text-blue-700 rounded-lg hover:bg-blue-50 transition-all shadow-md font-medium flex items-center">
-                        Schedule Consultation
-                        <ArrowRight size={16} className="ml-2"/>
-                    </button>
-                </div>
-            </div>
+            {/*        <button*/}
+            {/*            className="mt-4 md:mt-0 px-6 py-3 bg-white text-blue-700 rounded-lg hover:bg-blue-50 transition-all shadow-md font-medium flex items-center">*/}
+            {/*            Schedule Consultation*/}
+            {/*            <ArrowRight size={16} className="ml-2"/>*/}
+            {/*        </button>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
         </div>
     );
 };
