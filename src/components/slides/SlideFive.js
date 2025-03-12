@@ -15,7 +15,7 @@ const SlideFive = () => {
                             <li>Cloud STT: ~200ms delay for partial results</li>
                             <li>LLM: 500ms–1000ms to generate a short response</li>
                             <li>TTS: 200ms–500ms to produce audio</li>
-                            <li><strong>Total round-trip:</strong> ~1 second delay</li>
+                            <li><strong>Total round-trip:</strong> ~1.5 seconds delay</li>
                         </ul>
                     </div>
 
@@ -100,7 +100,7 @@ const SlideFive = () => {
                         <li>No big upfront license or hardware expense</li>
                         <li>Development: 1-2 months (2-3 developers)</li>
                         <li>Small budget for testing services</li>
-                        <li><span className="font-bold">Estimated cost: $20,000-$50,000</span></li>
+                        <li><span className="font-bold">Estimated cost: $20,000-$45,000</span></li>
                     </ul>
                 </div>
 
@@ -112,7 +112,7 @@ const SlideFive = () => {
                         <li>Setting up monitoring and analytics</li>
                         <li>Quality assurance and testing</li>
                         <li>Fine-tuning prompts and responses</li>
-                        <li><span className="font-bold">Estimated cost: $50,000-$120,000</span></li>
+                        <li><span className="font-bold">Estimated cost: $60,000-$110,000</span></li>
                     </ul>
                 </div>
 

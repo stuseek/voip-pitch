@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Menu } from 'lucide-react';
 
 // Import components
@@ -10,20 +11,36 @@ import SlideFour from './components/slides/SlideFour';
 import SlideFive from './components/slides/SlideFive';
 import SlideSix from './components/slides/SlideSix';
 import SlideSeven from './components/slides/SlideSeven';
-import SlideEight from './components/slides/SlideEight';
+import { SlideEight } from './components/slides/SlideEight';
+import SlideNine from './components/slides/SlideNine';
 
 // Import data
 import { nodeData } from './data/nodeData';
-import { teamMemberCosts } from './data/teamMemberCosts';
 
+// Main app wrapper with router
 const App = () => {
-    const [currentSlide, setCurrentSlide] = useState(1);
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Navigate to="/slide/1" replace />} />
+                <Route path="/slide/:slideId" element={<PresentationApp />} />
+            </Routes>
+        </Router>
+    );
+};
+
+// Main presentation component
+const PresentationApp = () => {
+    const { slideId } = useParams();
+    const navigate = useNavigate();
+    const currentSlide = parseInt(slideId, 10) || 1;
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [selectedConfig, setSelectedConfig] = useState({
-        telephony: 'Twilio (Cloud)',
-        stt: 'Deepgram (Cloud)',
-        llm: 'OpenAI GPT-4 (Cloud)',
-        tts: 'ElevenLabs (Cloud)'
+        telephony: nodeData?.telephony?.[0]?.name || 'Twilio (Cloud)',
+        stt: nodeData?.stt?.[0]?.name || 'Deepgram (Cloud)',
+        llm: nodeData?.llm?.[0]?.name || 'OpenAI GPT-4 (Cloud)',
+        tts: nodeData?.tts?.[0]?.name || 'ElevenLabs (Cloud)'
     });
 
     const slides = [
@@ -69,25 +86,42 @@ const App = () => {
                 nodeData={nodeData}
                 selectedConfig={selectedConfig}
                 setSelectedConfig={setSelectedConfig} />
+        },
+        {
+            id: 9,
+            title: "Implementation Planning",
+            component: <SlideNine
+                nodeData={nodeData}
+                selectedConfig={selectedConfig} />
         }
     ];
 
     const nextSlide = () => {
         if (currentSlide < slides.length) {
-            setCurrentSlide(currentSlide + 1);
+            navigate(`/slide/${currentSlide + 1}`);
         }
     };
 
     const prevSlide = () => {
         if (currentSlide > 1) {
-            setCurrentSlide(currentSlide - 1);
+            navigate(`/slide/${currentSlide - 1}`);
         }
     };
 
     const goToSlide = (slideNumber) => {
-        setCurrentSlide(slideNumber);
+        navigate(`/slide/${slideNumber}`);
         setIsMobileMenuOpen(false);
     };
+
+    // Validate current slide
+    const validSlideId = currentSlide >= 1 && currentSlide <= slides.length
+        ? currentSlide
+        : 1;
+
+    // If invalid slide ID, redirect to slide 1
+    if (validSlideId !== currentSlide) {
+        navigate(`/slide/1`, { replace: true });
+    }
 
     return (
         <div className="flex flex-col md:flex-row h-screen bg-gradient-to-br from-slate-50 to-slate-100 text-slate-800">
@@ -106,7 +140,7 @@ const App = () => {
             <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:block md:w-72 bg-white shadow-lg z-10 md:h-screen overflow-auto border-r border-slate-200`}>
                 <Sidebar
                     slides={slides}
-                    currentSlide={currentSlide}
+                    currentSlide={validSlideId}
                     goToSlide={goToSlide}
                 />
             </div>
@@ -115,16 +149,16 @@ const App = () => {
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Slide Content */}
                 <div className="flex-1 overflow-y-auto">
-                    {slides.find(slide => slide.id === currentSlide)?.component}
+                    {slides.find(slide => slide.id === validSlideId)?.component}
                 </div>
 
                 {/* Navigation Buttons */}
                 <div className="bg-white p-4 flex justify-between items-center border-t border-slate-200 shadow-md">
                     <button
                         onClick={prevSlide}
-                        disabled={currentSlide === 1}
+                        disabled={validSlideId === 1}
                         className={`flex items-center px-4 py-2 rounded-md transition-all ${
-                            currentSlide === 1
+                            validSlideId === 1
                                 ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
                                 : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg'
                         }`}
@@ -139,7 +173,7 @@ const App = () => {
                                 key={slide.id}
                                 onClick={() => goToSlide(slide.id)}
                                 className={`w-4 h-4 rounded-full transition-all ${
-                                    currentSlide === slide.id
+                                    validSlideId === slide.id
                                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 scale-125'
                                         : 'bg-slate-300 hover:bg-slate-400'
                                 }`}
@@ -150,9 +184,9 @@ const App = () => {
 
                     <button
                         onClick={nextSlide}
-                        disabled={currentSlide === slides.length}
+                        disabled={validSlideId === slides.length}
                         className={`flex items-center px-4 py-2 rounded-md transition-all ${
-                            currentSlide === slides.length
+                            validSlideId === slides.length
                                 ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
                                 : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg'
                         }`}
