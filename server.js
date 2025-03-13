@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 // Set HTTP basic auth credentials
 app.use(basicAuth({
-    users: { 'eyeclinic': 'eyeclin!c#' },
+    users: { 'eyeclinic': 'eyecl1n!c#' },
     challenge: true,  // Shows browser popup for credentials
 }));
 
