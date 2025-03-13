@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Info } from 'lucide-react';
 import ComponentSelectors from './ComponentSelectors';
 import ArchitectureDiagram from './ArchitectureDiagram';
 import PerformanceMetrics from './PerformanceMetrics';
@@ -18,6 +18,8 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
         complianceLevel: "",
         totalCostMonthly: 0
     });
+
+    const [showTooltip, setShowTooltip] = useState('');
 
     // Apply template configurations with improved selection logic
     const applyTemplate = (template) => {
@@ -80,11 +82,18 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
             return sorted[0]?.name || "";
         };
 
-        // Find components that best balance latency and realism
+        // Find components that best balance latency and realism (with special handling for LLMs)
         const findBalancedLatencyComponent = (category, maxLatency = 800) => {
             if (!nodeData[category]?.length) return "";
 
-            // Filter by acceptable latency
+            // For LLMs, prioritize latency strictly
+            if (category === 'llm') {
+                // Just get the lowest latency option
+                const sorted = [...nodeData[category]].sort((a, b) => a.latency_ms - b.latency_ms);
+                return sorted[0]?.name || "";
+            }
+
+            // For other components, filter by acceptable latency
             const viableLatency = nodeData[category].filter(item => item.latency_ms <= maxLatency);
 
             // If nothing meets latency requirement, just get lowest latency
@@ -102,19 +111,27 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
         const findHIPAAComponent = (category, minRealism = 6) => {
             if (!nodeData[category]?.length) return "";
 
-            // Step 1: Get all on-prem options that meet minimum realism requirements
+            // Step 1: Get all on-prem options
             const onPremOptions = nodeData[category].filter(
-                item => item.type === 'on-prem' && item.realism >= minRealism
+                item => item.type === 'on-prem'
             );
 
-            // If we have on-prem options, sort them by latency (lowest first)
+            // If we have on-prem options that meet minimum realism, prioritize those
+            const viableOnPremOptions = onPremOptions.filter(item => item.realism >= minRealism);
+
+            // If we have viable on-prem options, sort them by latency (lowest first)
+            if (viableOnPremOptions.length > 0) {
+                const sorted = [...viableOnPremOptions].sort((a, b) => a.latency_ms - b.latency_ms);
+                return sorted[0]?.name || "";
+            }
+
+            // If no viable on-prem options, try any on-prem option sorted by latency
             if (onPremOptions.length > 0) {
                 const sorted = [...onPremOptions].sort((a, b) => a.latency_ms - b.latency_ms);
                 return sorted[0]?.name || "";
             }
 
             // Step 2: If no on-prem options available, fall back to cloud with a warning
-            // (In a real implementation, we might want to show a warning to the user)
             const cloudOptions = nodeData[category].filter(
                 item => item.realism >= minRealism
             );
@@ -139,14 +156,16 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
                 llm: findBestComponent('llm', { realism: 0.7, latency: 0.3, cost: 0, compliance: 0 }),
                 tts: findBestComponent('tts', { realism: 0.7, latency: 0.3, cost: 0, compliance: 0 })
             });
+            setShowTooltip('realism');
         } else if (template === "lowest-latency") {
-            // Balanced latency approach that considers realism within acceptable latency threshold
+            // Balanced latency approach with special handling for LLMs
             setSelectedConfig({
                 telephony: findBalancedLatencyComponent('telephony', 300),
                 stt: findBalancedLatencyComponent('stt', 500),
-                llm: findBalancedLatencyComponent('llm', 1000),
+                llm: findBalancedLatencyComponent('llm'), // LLM handled differently - pure latency focus
                 tts: findBalancedLatencyComponent('tts', 500)
             });
+            setShowTooltip('latency');
         } else if (template === "cost-effective") {
             // Cost effective based on 5-year TCO calculation
             setSelectedConfig({
@@ -155,6 +174,7 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
                 llm: findBestCostComponent('llm'),
                 tts: findBestCostComponent('tts')
             });
+            setShowTooltip('cost');
         } else if (template === "hipaa-compliant") {
             // HIPAA compliant with performance considerations
             setSelectedConfig({
@@ -163,6 +183,7 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
                 llm: findHIPAAComponent('llm'),
                 tts: findHIPAAComponent('tts')
             });
+            setShowTooltip('hipaa');
         }
     };
 
@@ -179,6 +200,20 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
         }
     }, [selectedConfig, nodeData, getSelectedNodeDetails]);
 
+    // Tooltip content based on selection
+    const getTooltipContent = () => {
+        if (showTooltip === 'realism') {
+            return "Optimized for the most human-like experience with high-quality voice and conversational abilities. May have higher latency.";
+        } else if (showTooltip === 'latency') {
+            return "Optimized for the fastest response times. For LLMs, we're strictly prioritizing speed over quality.";
+        } else if (showTooltip === 'cost') {
+            return "Balanced for the lowest 5-year total cost of ownership while maintaining acceptable quality.";
+        } else if (showTooltip === 'hipaa') {
+            return "Prioritizes on-premises components for maximum data security and HIPAA compliance.";
+        }
+        return "";
+    };
+
     return (
         <div className="p-8 space-y-8">
             <div className="text-center mb-8">
@@ -190,36 +225,101 @@ const SlideEight = ({ nodeData, selectedConfig, setSelectedConfig }) => {
                 <p className="text-slate-700">Configure your ideal AI Phone Assistant by selecting components for each part of the system. The diagram and metrics will update automatically to show your custom configuration.</p>
             </div>
 
-            {/* Template Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <button
-                    className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center"
-                    onClick={() => applyTemplate('best-realism')}
-                >
-                    <RefreshCw size={16} className="mr-2" />
-                    Best Realism
-                </button>
-                <button
-                    className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center justify-center"
-                    onClick={() => applyTemplate('lowest-latency')}
-                >
-                    <RefreshCw size={16} className="mr-2" />
-                    Lowest Latency
-                </button>
-                <button
-                    className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center justify-center"
-                    onClick={() => applyTemplate('cost-effective')}
-                >
-                    <RefreshCw size={16} className="mr-2" />
-                    Cost Effective
-                </button>
-                <button
-                    className="p-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-500 flex items-center justify-center"
-                    onClick={() => applyTemplate('hipaa-compliant')}
-                >
-                    <RefreshCw size={16} className="mr-2" />
-                    HIPAA Compliant
-                </button>
+            {/* Template Buttons with Fixed Position Tooltips */}
+            <div className="relative mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="relative">
+                        <button
+                            className={`w-full p-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center ${showTooltip === 'realism' ? 'ring-2 ring-blue-400' : ''}`}
+                            onClick={() => applyTemplate('best-realism')}
+                            onMouseEnter={() => setShowTooltip('realism')}
+                            onMouseLeave={() => setShowTooltip('')}
+                        >
+                            <RefreshCw size={16} className="mr-2" />
+                            Best Realism
+                        </button>
+                        {showTooltip === 'realism' && (
+                            <div className="absolute left-0 right-0 bottom-full mb-2 z-10">
+                                <div className="bg-slate-800 text-white p-3 rounded-lg text-sm shadow-lg">
+                                    <div className="flex items-start">
+                                        <Info size={16} className="text-slate-300 mr-2 mt-0.5 flex-shrink-0" />
+                                        <p>{getTooltipContent()}</p>
+                                    </div>
+                                    <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-slate-800"></div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="relative">
+                        <button
+                            className={`w-full p-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center justify-center ${showTooltip === 'latency' ? 'ring-2 ring-purple-400' : ''}`}
+                            onClick={() => applyTemplate('lowest-latency')}
+                            onMouseEnter={() => setShowTooltip('latency')}
+                            onMouseLeave={() => setShowTooltip('')}
+                        >
+                            <RefreshCw size={16} className="mr-2" />
+                            Low Latency
+                        </button>
+                        {showTooltip === 'latency' && (
+                            <div className="absolute left-0 right-0 bottom-full mb-2 z-10">
+                                <div className="bg-slate-800 text-white p-3 rounded-lg text-sm shadow-lg">
+                                    <div className="flex items-start">
+                                        <Info size={16} className="text-slate-300 mr-2 mt-0.5 flex-shrink-0" />
+                                        <p>{getTooltipContent()}</p>
+                                    </div>
+                                    <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-slate-800"></div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="relative">
+                        <button
+                            className={`w-full p-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center justify-center ${showTooltip === 'cost' ? 'ring-2 ring-green-400' : ''}`}
+                            onClick={() => applyTemplate('cost-effective')}
+                            onMouseEnter={() => setShowTooltip('cost')}
+                            onMouseLeave={() => setShowTooltip('')}
+                        >
+                            <RefreshCw size={16} className="mr-2" />
+                            Cost Effective
+                        </button>
+                        {showTooltip === 'cost' && (
+                            <div className="absolute left-0 right-0 bottom-full mb-2 z-10">
+                                <div className="bg-slate-800 text-white p-3 rounded-lg text-sm shadow-lg">
+                                    <div className="flex items-start">
+                                        <Info size={16} className="text-slate-300 mr-2 mt-0.5 flex-shrink-0" />
+                                        <p>{getTooltipContent()}</p>
+                                    </div>
+                                    <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-slate-800"></div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="relative">
+                        <button
+                            className={`w-full p-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-500 flex items-center justify-center ${showTooltip === 'hipaa' ? 'ring-2 ring-amber-400' : ''}`}
+                            onClick={() => applyTemplate('hipaa-compliant')}
+                            onMouseEnter={() => setShowTooltip('hipaa')}
+                            onMouseLeave={() => setShowTooltip('')}
+                        >
+                            <RefreshCw size={16} className="mr-2" />
+                            HIPAA Compliant
+                        </button>
+                        {showTooltip === 'hipaa' && (
+                            <div className="absolute left-0 right-0 bottom-full mb-2 z-10">
+                                <div className="bg-slate-800 text-white p-3 rounded-lg text-sm shadow-lg">
+                                    <div className="flex items-start">
+                                        <Info size={16} className="text-slate-300 mr-2 mt-0.5 flex-shrink-0" />
+                                        <p>{getTooltipContent()}</p>
+                                    </div>
+                                    <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-slate-800"></div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

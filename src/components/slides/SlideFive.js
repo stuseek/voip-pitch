@@ -15,7 +15,7 @@ const SlideFive = () => {
                             <li>Cloud STT: ~200ms delay for partial results</li>
                             <li>LLM: 500ms–1000ms to generate a short response</li>
                             <li>TTS: 200ms–500ms to produce audio</li>
-                            <li><strong>Total round-trip:</strong> ~1.5 seconds delay</li>
+                            <li><strong>Total round-trip:</strong> ~1.8 seconds delay</li>
                         </ul>
                     </div>
 

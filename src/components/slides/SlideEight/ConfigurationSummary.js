@@ -9,7 +9,7 @@ const ConfigurationSummary = ({ metrics }) => {
             <h3 className="text-xl font-bold mb-4">Configuration Summary</h3>
             <p className="mb-4 text-slate-700">
                 Your current configuration is a <strong>{metrics.deploymentType}</strong> solution with
-                <strong className={getMetricColor('latency', metrics.totalLatency)}> {metrics.totalLatency < 500 ? 'excellent' : metrics.totalLatency < 800 ? 'good' : metrics.totalLatency < 1000 ? 'acceptable' : 'poor'} latency</strong> and
+                <strong className={getMetricColor('latency', metrics.totalLatency)}> {metrics.totalLatency < 500 ? 'excellent' : metrics.totalLatency < 900 ? 'good' : metrics.totalLatency < 1000 ? 'acceptable' : 'poor'} latency</strong> and
                 <strong className={getMetricColor('realism', metrics.avgRealism)}> {
                     metrics.avgRealism >= 9 ? 'excellent' :
                         metrics.avgRealism >= 7 ? 'good' :
@@ -45,7 +45,7 @@ const ConfigurationSummary = ({ metrics }) => {
                                 <li>Flexible approach to scaling different components</li>
                             </>
                         )}
-                        {metrics.totalLatency < 800 && (
+                        {metrics.totalLatency < 900 && (
                             <li>Responsive conversation flow with minimal delays</li>
                         )}
                         {metrics.avgRealism >= 8 && (
@@ -78,7 +78,7 @@ const ConfigurationSummary = ({ metrics }) => {
                                 <li>May require expertise in both cloud and on-prem systems</li>
                             </>
                         )}
-                        {metrics.totalLatency > 800 && (
+                        {metrics.totalLatency > 900 && (
                             <li>Response delays may be noticeable to callers</li>
                         )}
                         {metrics.avgRealism < 8 && (
